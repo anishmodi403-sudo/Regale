@@ -8,7 +8,9 @@
       "PowerShell(npm install)",
       "PowerShell(npx tsc --noEmit)",
       "PowerShell(npm run build)",
-      "PowerShell($paths = @\\(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\",\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\",\"$env:LOCALAPPDATA\\\\Programs\\\\Git\\\\bin\\\\git.exe\"\\); foreach \\($p in $paths\\) { Write-Output \"$p : $\\(Test-Path $p\\)\" }; where.exe git 2>$null)"
+      "PowerShell($paths = @\\(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\",\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\",\"$env:LOCALAPPDATA\\\\Programs\\\\Git\\\\bin\\\\git.exe\"\\); foreach \\($p in $paths\\) { Write-Output \"$p : $\\(Test-Path $p\\)\" }; where.exe git 2>$null)",
+      "PowerShell(winget --version 2>&1)",
+      "PowerShell(winget install --id Git.Git -e --source winget --accept-package-agreements --accept-source-agreements --disable-interactivity)"
     ]
   }
 }
