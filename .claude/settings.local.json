@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(node -v)",
+      "PowerShell(npm -v)",
+      "PowerShell(npm create vite@latest . -- --template react-ts)",
+      "PowerShell(npm create vite@latest . -- --template react-ts --force)",
+      "PowerShell(npm install)",
+      "PowerShell(npx tsc --noEmit)",
+      "PowerShell(npm run build)",
+      "PowerShell($paths = @\\(\"C:\\\\Program Files\\\\Git\\\\bin\\\\git.exe\",\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\",\"$env:LOCALAPPDATA\\\\Programs\\\\Git\\\\bin\\\\git.exe\"\\); foreach \\($p in $paths\\) { Write-Output \"$p : $\\(Test-Path $p\\)\" }; where.exe git 2>$null)"
+    ]
+  }
+}
