@@ -1,6 +1,7 @@
 import { useMemo, useState, type ReactNode } from 'react'
 import { useAppState } from '../../state/AppStateContext'
 import { SlideOverPanel } from '../common/Overlay'
+import { SelectChip } from '../common/SelectChip'
 import type { PromiseTier, RequestType } from '../../types'
 import { formatClockTime } from '../../lib/format'
 
@@ -54,13 +55,12 @@ export function AddRequestModal() {
           <h3 className="mb-3 text-[11px] font-bold uppercase tracking-label text-text-secondary">Request Details</h3>
           <div className="space-y-3">
             <Field label="Request Type" required>
-              <select value={type} onChange={(e) => setType(e.target.value as RequestType)} className={inputClass}>
-                {REQUEST_TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
+              <SelectChip
+                variant="field"
+                value={type}
+                onChange={(v) => setType(v as RequestType)}
+                options={REQUEST_TYPES.map((t) => ({ value: t, label: t }))}
+              />
             </Field>
             <div className="grid grid-cols-2 gap-3">
               <Field label="Room Number" required>
@@ -131,14 +131,15 @@ export function AddRequestModal() {
 
         <section>
           <h3 className="mb-3 text-[11px] font-bold uppercase tracking-label text-text-secondary">Assign Server (Optional)</h3>
-          <select value={serverId} onChange={(e) => setServerId(e.target.value)} className={inputClass}>
-            <option value="auto">Auto assign (AI will assign)</option>
-            {servers.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name} — {s.status === 'free' ? 'Free' : s.statusLine}
-              </option>
-            ))}
-          </select>
+          <SelectChip
+            variant="field"
+            value={serverId}
+            onChange={setServerId}
+            options={[
+              { value: 'auto', label: 'Auto assign (AI will assign)' },
+              ...servers.map((s) => ({ value: s.id, label: `${s.name} — ${s.status === 'free' ? 'Free' : s.statusLine}` })),
+            ]}
+          />
           <p className="mt-1.5 text-[11px] text-text-secondary">You can reassign later if needed.</p>
         </section>
       </div>

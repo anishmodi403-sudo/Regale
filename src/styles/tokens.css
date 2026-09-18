@@ -59,12 +59,13 @@
 }
 
 .dark {
-  /* Surfaces — three deliberately distinct elevation steps, warm charcoal,
-     never pure black, never flat-near-black */
-  --bg-canvas: 21 19 17; /* #151311 — darkest */
-  --bg-panel: 33 30 27; /* #211E1B — one step up: sidebar/rail/column region */
-  --surface-card: 56 50 43; /* #38322B — lighter still: cards clearly float */
-  --border: 74 67 58; /* #4A433A — visible against both panel and card */
+  /* Surfaces — three deliberately distinct elevation steps, near-neutral
+     graphite (very slightly warm at most — never the brown/amber cast of
+     the earlier warm-charcoal pass), never pure black, never flat */
+  --bg-canvas: 20 19 19; /* #141313 — darkest */
+  --bg-panel: 30 29 29; /* #1E1D1D — one step up: sidebar/rail/column region */
+  --surface-card: 46 44 44; /* #2E2C2C — lighter still: cards clearly float */
+  --border: 64 62 61; /* #40403D — visible against both panel and card */
 
   /* Brand & primary — lifted for contrast on dark */
   --primary: 128 122 247; /* #807AF7 */
@@ -73,15 +74,16 @@
   --brand-gold: 224 195 128; /* #E0C380 */
 
   /* Semantic status — lifted for contrast on dark, tuned for WCAG AA on
-     the card surface above */
+     the card surface above. Unchanged by the graphite pass — these are
+     meant to read as clear accents against the now-neutral surfaces. */
   --danger: 247 129 132; /* #F78184 */
   --warning: 250 189 73; /* #FABD49 */
   --success: 74 214 128; /* #4AD680 */
   --info: 100 152 255; /* #6498FF */
 
-  /* Text */
-  --text-primary: 244 241 234; /* #F4F1EA */
-  --text-secondary: 178 170 157; /* #B2AA9D */
+  /* Text — neutralized alongside the surfaces (was a warm cream/tan) */
+  --text-primary: 239 239 237; /* #EFEFED */
+  --text-secondary: 158 158 156; /* #9E9E9C */
 
   /* Tints — proper, legible pill/badge backgrounds (clearly tinted, not
      just a hint) */
@@ -92,12 +94,13 @@
   --primary-tint: 42 38 76;
 
   /* Washes — barely-there column grouping only: a whisper of hue nudged
-     off the panel base, never a heavy tint smeared across the surface */
-  --danger-wash: 41 31 29;
-  --warning-wash: 40 35 28;
-  --success-wash: 30 36 32;
-  --info-wash: 29 33 39;
-  --primary-wash: 33 31 41;
+     off the (now neutral) panel base, never a heavy tint smeared across
+     the surface */
+  --danger-wash: 38 30 31;
+  --warning-wash: 37 34 30;
+  --success-wash: 27 35 34;
+  --info-wash: 26 32 41;
+  --primary-wash: 30 30 43;
 
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.45);
   --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.55);

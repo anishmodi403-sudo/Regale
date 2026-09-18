@@ -1,15 +1,9 @@
 import type { ServiceRequest } from '../../types'
 import { useAppState } from '../../state/AppStateContext'
-import { columnFor, timeStatus, timerLabel } from '../../lib/urgency'
+import { columnFor, statusPillFor, timeStatus, timerLabel } from '../../lib/urgency'
 import { floorLabel } from '../../lib/format'
 import { Pill } from '../common/Pill'
 import { BellIcon, ChevronRight } from '../common/Icons'
-
-const COLUMN_PILL: Record<'breached' | 'to_do' | 'in_progress', { label: string; tone: 'danger' | 'info' | 'warning' }> = {
-  breached: { label: 'BREACH', tone: 'danger' },
-  to_do: { label: 'ACCEPTED', tone: 'info' },
-  in_progress: { label: 'ON THE WAY', tone: 'warning' },
-}
 
 // No left-bar and no resting tint (Iteration 2 §2, refined) — every card,
 // breached included, is a plain neutral card at rest. Color lives only on
@@ -25,10 +19,10 @@ export function RequestCard({ request }: { request: ServiceRequest }) {
   const { now, openModal, selectMode, selection, toggleSelected } = useAppState()
   const column = columnFor(request, now)
   const status = timeStatus(request, now)
-  const pill = COLUMN_PILL[column]
+  const pill = statusPillFor(request, now)
   const isSelected = selection.has(request.id)
 
-  const timerColor = column === 'breached' ? 'text-danger' : status === 'at_risk' ? 'text-warning' : 'text-text-primary'
+  const timerColor = status === 'breached' ? 'text-danger' : status === 'at_risk' ? 'text-warning' : 'text-text-primary'
 
   function handleClick() {
     if (selectMode) {
@@ -52,13 +46,11 @@ export function RequestCard({ request }: { request: ServiceRequest }) {
       <div className="flex items-baseline justify-between gap-2">
         <div className="flex items-baseline gap-1.5">
           {selectMode && (
-            <input
-              type="checkbox"
-              readOnly
-              checked={isSelected}
-              className="mr-1 h-4 w-4 accent-primary"
-              onClick={(e) => e.stopPropagation()}
-            />
+            // No onClick/stopPropagation here — the click is meant to bubble
+            // up to the card's own onClick (handleClick), which is already
+            // the single source of truth for toggling selection. That's what
+            // makes the whole card (checkbox included) one click target.
+            <input type="checkbox" readOnly checked={isSelected} className="mr-1 h-4 w-4 accent-primary" />
           )}
           <span className="text-xl font-extrabold leading-none text-text-primary">{request.id}</span>
           <span className="rounded-md bg-panel px-1.5 py-0.5 text-[11px] font-semibold text-text-secondary">
@@ -81,7 +73,7 @@ export function RequestCard({ request }: { request: ServiceRequest }) {
         <Pill tone={pill.tone}>{pill.label}</Pill>
         <div className="flex items-center gap-2">
           <span className={`flex items-center gap-1 text-[13px] font-bold ${timerColor}`}>
-            {column === 'breached' && <BellIcon size={13} className="animate-bell-ring text-danger" />}
+            {status === 'breached' && <BellIcon size={13} className="animate-bell-ring text-danger" />}
             {timerLabel(request, now)}
           </span>
           <ChevronRight

@@ -42,13 +42,31 @@ export function minutesLeft(request: ServiceRequest, nowMs: number): number {
   return Math.max(0, Math.round((promiseAt - nowMs) / 60000))
 }
 
-/** Column placement — the strict rule from spec §4.2: a breach always pins
- * the card into the Breached column regardless of progress; otherwise
- * anything actively progressing is In Progress, everything else is To Do.
- * To Do and In Progress never overlap. */
+/** Column placement follows lifecycle state, not urgency. An On-the-Way
+ * request stays in In Progress even after it breaches its promise time —
+ * the breach shows there as a red pill/timer overlay (see statusPillFor),
+ * never a column move, so In Progress never empties out while a server is
+ * actively carrying requests. Only a request that is overdue AND not yet
+ * picked up (still just "accepted", not on a running trip) belongs in the
+ * Breached column. To Do and In Progress never overlap. */
 export function columnFor(request: ServiceRequest, nowMs: number): BoardColumn {
+  if (request.progressState === 'in_progress') return 'in_progress'
   if (timeStatus(request, nowMs) === 'breached') return 'breached'
-  return request.progressState === 'in_progress' ? 'in_progress' : 'to_do'
+  return 'to_do'
+}
+
+export interface StatusPillMeta {
+  label: string
+  tone: 'danger' | 'info' | 'warning'
+}
+
+/** The status pill + timer are an urgency overlay, independent of which
+ * column the card lives in — a breached On-the-Way request still shows
+ * the red BREACH pill even though columnFor keeps it in In Progress. */
+export function statusPillFor(request: ServiceRequest, nowMs: number): StatusPillMeta {
+  if (timeStatus(request, nowMs) === 'breached') return { label: 'BREACH', tone: 'danger' }
+  if (request.progressState === 'in_progress') return { label: 'ON THE WAY', tone: 'warning' }
+  return { label: 'ACCEPTED', tone: 'info' }
 }
 
 /** Sorting is independent per column (spec §4.2):

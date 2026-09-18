@@ -13,7 +13,7 @@ const RUN_STATE_META: Record<TripRunState, { label: string; tone: PillTone }> = 
 }
 
 export function TripDetailPanel({ tripId }: { tripId: string }) {
-  const { trips, requests, servers, closeModal, openModal, removeStopFromTrip, startTrip, showToast } = useAppState()
+  const { trips, requests, servers, closeModal, openModal, removeStopFromTrip, startTrip } = useAppState()
 
   const trip = trips.find((t) => t.id === tripId)
   if (!trip) return null
@@ -43,41 +43,33 @@ export function TripDetailPanel({ tripId }: { tripId: string }) {
       }
       onClose={closeModal}
       footer={
-        <div className="flex items-center gap-2">
+        runState === 'assigned' ? (
           <button
-            onClick={() => showToast('Remove a stop with the × next to it, or pick a new server below')}
-            className="flex-1 rounded-button border border-hairline px-4 py-2.5 text-sm font-semibold text-text-secondary transition hover:border-text-secondary/40 hover:text-text-primary"
+            onClick={() => startTrip(trip.id)}
+            className="w-full rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-primary-contrast hover:bg-primary-alt"
           >
-            ✎ Edit Trip
+            Start Trip
           </button>
-          {runState === 'assigned' ? (
-            <button
-              onClick={() => startTrip(trip.id)}
-              className="flex-1 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-primary-contrast hover:bg-primary-alt"
-            >
-              Start Trip
-            </button>
-          ) : runState === 'running' ? (
-            <div className="flex flex-1 items-center justify-center gap-1.5 rounded-button bg-warning-tint px-4 py-2.5 text-sm font-semibold text-warning">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-warning opacity-60" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-warning" />
-              </span>
-              In progress · {doneCount}/{stops.length} done
-            </div>
-          ) : runState === 'done' ? (
-            <div className="flex-1 rounded-button bg-success-tint px-4 py-2.5 text-center text-sm font-semibold text-success">
-              ✓ Trip completed
-            </div>
-          ) : (
-            <button
-              onClick={() => openModal({ type: 'select-server', tripId: trip.id })}
-              className="flex-1 rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-primary-contrast hover:bg-primary-alt"
-            >
-              Assign to Server ›
-            </button>
-          )}
-        </div>
+        ) : runState === 'running' ? (
+          <div className="flex w-full items-center justify-center gap-1.5 rounded-button bg-warning-tint px-4 py-2.5 text-sm font-semibold text-warning">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-warning opacity-60" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-warning" />
+            </span>
+            In progress · {doneCount}/{stops.length} done
+          </div>
+        ) : runState === 'done' ? (
+          <div className="w-full rounded-button bg-success-tint px-4 py-2.5 text-center text-sm font-semibold text-success">
+            ✓ Trip completed
+          </div>
+        ) : (
+          <button
+            onClick={() => openModal({ type: 'select-server', tripId: trip.id })}
+            className="w-full rounded-button bg-primary px-4 py-2.5 text-sm font-semibold text-primary-contrast hover:bg-primary-alt"
+          >
+            Assign to Server ›
+          </button>
+        )
       }
     >
       <div className="space-y-6">

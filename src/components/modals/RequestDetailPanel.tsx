@@ -1,16 +1,10 @@
 import { useAppState } from '../../state/AppStateContext'
 import { SlideOverPanel } from '../common/Overlay'
 import { floorLabel, formatClockTime } from '../../lib/format'
-import { columnFor, timerLabel, timeStatus } from '../../lib/urgency'
+import { statusPillFor, timerLabel, timeStatus } from '../../lib/urgency'
 import { Pill } from '../common/Pill'
 import { BellIcon } from '../common/Icons'
 import type { ServiceRequest } from '../../types'
-
-const COLUMN_META = {
-  breached: { label: 'BREACH', tone: 'danger' as const },
-  to_do: { label: 'ACCEPTED', tone: 'info' as const },
-  in_progress: { label: 'ON THE WAY', tone: 'warning' as const },
-}
 
 interface TimelineNode {
   key: string
@@ -52,8 +46,7 @@ export function RequestDetailPanel({ requestId }: { requestId: string }) {
   const request = requests.find((r) => r.id === requestId)
   if (!request) return null
 
-  const column = columnFor(request, now)
-  const meta = COLUMN_META[column]
+  const meta = statusPillFor(request, now)
   const status = timeStatus(request, now)
   const trip = trips.find((t) => t.id === request.tripId)
   const server = servers.find((s) => s.id === request.assignedServerId)
@@ -98,8 +91,8 @@ export function RequestDetailPanel({ requestId }: { requestId: string }) {
 
         <div className="flex items-center justify-between rounded-card border border-hairline bg-panel p-3">
           <Pill tone={meta.tone}>{meta.label}</Pill>
-          <span className={`flex items-center gap-1 text-sm font-bold ${column === 'breached' ? 'text-danger' : status === 'at_risk' ? 'text-warning' : 'text-text-primary'}`}>
-            {column === 'breached' && <BellIcon size={13} className="animate-bell-ring text-danger" />}
+          <span className={`flex items-center gap-1 text-sm font-bold ${status === 'breached' ? 'text-danger' : status === 'at_risk' ? 'text-warning' : 'text-text-primary'}`}>
+            {status === 'breached' && <BellIcon size={13} className="animate-bell-ring text-danger" />}
             {timerLabel(request, now)}
           </span>
         </div>
